@@ -1,0 +1,498 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/SBonomini/EMSC2010_CWACOFS_W5_Assignment/blob/main/EMSC2010_CWACOFS_Week5.ipynb_V1\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# EMSC2010 Group Project template"
+      ],
+      "metadata": {
+        "id": "Ywn0yC4OUbvo"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## 1. Project Overview\n",
+        "Group name: Cloudy With a Chance of Stats\n",
+        "\n",
+        "Project week: 5\n",
+        "\n",
+        "Project title: Optimal BBQ Conditions on Xmas\n",
+        "\n",
+        "Datasets used (name and source):"
+      ],
+      "metadata": {
+        "id": "DGdB2GbnUjlZ"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## 2. Roles and contributions\n",
+        "\n",
+        "| Role | Primary | Deputy | Completed? | Notes |\n",
+        "| :--- | :--- | :--- | :--- | :--- |\n",
+        "| Github & integration | Sutton | Kimi | Yes/Partial/No| Add note|\n",
+        "| Data steward | Kimi | Cathy | Yes/Partial/No| Add note|\n",
+        "| Analysis / modelling | Cathy | Sameer | Yes/Partial/No| Add note|\n",
+        "| Visualisation / interpretation | Sameer | Leo | Yes/Partial/No| Add note|\n",
+        "| Narrative | Leo | Elena | Yes/Partial/No| Add note|\n",
+        "| Quality Control / Reproducibility  | Elena | Sutton | Yes/Partial/No/NA| Add note|\n"
+      ],
+      "metadata": {
+        "id": "szVFTnO5U4xA"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## 3. Deputy Interventions (if applicable)\n",
+        "Repeat text as required.\n",
+        "\n",
+        "* Role affected:\n",
+        "\n",
+        "* Reason (e.g. missed deadline, absence, etc.):\n",
+        "\n",
+        "* Deputy action taken:\n",
+        "\n",
+        "* Impact on workflow:\n",
+        "\n",
+        "*N.B., this section should be factual, not judgemental.*"
+      ],
+      "metadata": {
+        "id": "g83421iLWcfe"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## 4. Pre-submission checklist\n",
+        "* Notebook runs from top to bottom.\n",
+        "* Datafiles are included in the GitHub repository.\n",
+        "* Commits include meaningful information.\n",
+        "* Each group member has included a brief reflection in the notebook.\n",
+        "* Repository has been shared with the teaching team once your project is completed."
+      ],
+      "metadata": {
+        "id": "j2hPZOqgW6qF"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Start your group project here"
+      ],
+      "metadata": {
+        "id": "a3Xv5JXfYU-_"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "id": "2BT3qjvKUait"
+      },
+      "outputs": [],
+      "source": [
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "import pandas as pd"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Daily Maximum Temperature data was obtained from the Bureau of Meteorology station records. Each value was taken for the 25th of December, the years 1996-2025 and from the weather stations located in Canberra (station number: 070339) and Ulladulla (station number: 069138). Years 1996-2025 were chosen due to the furthest year of data available from the Canberra station. Additionally, the 2001 value from the Ulladulla dataset is unavailable due to the value being missing from the station data.\n"
+      ],
+      "metadata": {
+        "id": "LhdhLViw49nP"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "spreadsheet_name = 'canberra_ulladulla .xlsx' #load data\n",
+        "df = pd.read_excel(spreadsheet_name) #define data as df\n",
+        "df.columns = df.columns.str.strip() # Clean column names by stripping whitespace\n",
+        "df.head() #show the dataframe header information"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 206
+        },
+        "id": "Oba1dCTR1KPJ",
+        "outputId": "e0c0925e-14ed-4328-f5f0-8f7a454c7993"
+      },
+      "execution_count": 6,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "   year  canberra(ºC)  ulladulla (ºC)\n",
+              "0  1996          33.3            21.4\n",
+              "1  1997          32.6            24.0\n",
+              "2  1998          31.9            25.0\n",
+              "3  1999          21.7            24.1\n",
+              "4  2000          27.8            28.8"
+            ],
+            "text/html": [
+              "\n",
+              "  <div id=\"df-6e608c56-fcf4-4c94-8b96-d4f07ebaebf5\" class=\"colab-df-container\">\n",
+              "    <div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>year</th>\n",
+              "      <th>canberra(ºC)</th>\n",
+              "      <th>ulladulla (ºC)</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>1996</td>\n",
+              "      <td>33.3</td>\n",
+              "      <td>21.4</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>1997</td>\n",
+              "      <td>32.6</td>\n",
+              "      <td>24.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>1998</td>\n",
+              "      <td>31.9</td>\n",
+              "      <td>25.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>1999</td>\n",
+              "      <td>21.7</td>\n",
+              "      <td>24.1</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>2000</td>\n",
+              "      <td>27.8</td>\n",
+              "      <td>28.8</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>\n",
+              "    <div class=\"colab-df-buttons\">\n",
+              "\n",
+              "  <div class=\"colab-df-container\">\n",
+              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-6e608c56-fcf4-4c94-8b96-d4f07ebaebf5')\"\n",
+              "            title=\"Convert this dataframe to an interactive table.\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
+              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
+              "  </svg>\n",
+              "    </button>\n",
+              "\n",
+              "  <style>\n",
+              "    .colab-df-container {\n",
+              "      display:flex;\n",
+              "      gap: 12px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert {\n",
+              "      background-color: #E8F0FE;\n",
+              "      border: none;\n",
+              "      border-radius: 50%;\n",
+              "      cursor: pointer;\n",
+              "      display: none;\n",
+              "      fill: #1967D2;\n",
+              "      height: 32px;\n",
+              "      padding: 0 0 0 0;\n",
+              "      width: 32px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert:hover {\n",
+              "      background-color: #E2EBFA;\n",
+              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "      fill: #174EA6;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-buttons div {\n",
+              "      margin-bottom: 4px;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert {\n",
+              "      background-color: #3B4455;\n",
+              "      fill: #D2E3FC;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert:hover {\n",
+              "      background-color: #434B5C;\n",
+              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
+              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
+              "      fill: #FFFFFF;\n",
+              "    }\n",
+              "  </style>\n",
+              "\n",
+              "    <script>\n",
+              "      const buttonEl =\n",
+              "        document.querySelector('#df-6e608c56-fcf4-4c94-8b96-d4f07ebaebf5 button.colab-df-convert');\n",
+              "      buttonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "\n",
+              "      async function convertToInteractive(key) {\n",
+              "        const element = document.querySelector('#df-6e608c56-fcf4-4c94-8b96-d4f07ebaebf5');\n",
+              "        const dataTable =\n",
+              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
+              "                                                    [key], {});\n",
+              "        if (!dataTable) return;\n",
+              "\n",
+              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
+              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
+              "          + ' to learn more about interactive tables.';\n",
+              "        element.innerHTML = '';\n",
+              "        dataTable['output_type'] = 'display_data';\n",
+              "        await google.colab.output.renderOutput(dataTable, element);\n",
+              "        const docLink = document.createElement('div');\n",
+              "        docLink.innerHTML = docLinkHtml;\n",
+              "        element.appendChild(docLink);\n",
+              "      }\n",
+              "    </script>\n",
+              "  </div>\n",
+              "\n",
+              "\n",
+              "    </div>\n",
+              "  </div>\n"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "dataframe",
+              "variable_name": "df",
+              "summary": "{\n  \"name\": \"df\",\n  \"rows\": 29,\n  \"fields\": [\n    {\n      \"column\": \"year\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 8,\n        \"min\": 1996,\n        \"max\": 2025,\n        \"num_unique_values\": 29,\n        \"samples\": [\n          2024,\n          2013,\n          2009\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"canberra(\\u00baC)\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 4.851473799739276,\n        \"min\": 18.6,\n        \"max\": 33.3,\n        \"num_unique_values\": 25,\n        \"samples\": [\n          24.8,\n          31.1,\n          33.3\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"ulladulla (\\u00baC)\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 2.642239310022575,\n        \"min\": 16.7,\n        \"max\": 28.8,\n        \"num_unique_values\": 24,\n        \"samples\": [\n          27.5,\n          20.9,\n          21.4\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    }\n  ]\n}"
+            }
+          },
+          "metadata": {},
+          "execution_count": 6
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "Canberra = np.random.choice(df['canberra(ºC)'], size=(len(df), 100000), replace=True)\n",
+        "#Create 100000 simulated versions of Canberra temperature dataset by randomly resampling it (with replacement)\n",
+        "#len(df) is the length of Canberra data (which is 29)\n",
+        "print(Canberra)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "aFj8UfUE1Mxx",
+        "outputId": "b8a2a821-3d08-42cd-a649-6241aea85d19"
+      },
+      "execution_count": 8,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "[[19.1 18.6 20.5 ... 31.9 32.5 29. ]\n",
+            " [32.5 32.2 29.8 ... 31.1 29.  32.5]\n",
+            " [31.9 32.6 29.8 ... 24.8 31.1 33.3]\n",
+            " ...\n",
+            " [28.9 31.1 29.  ... 27.8 29.  21.7]\n",
+            " [26.3 27.8 31.9 ... 31.9 29.8 21. ]\n",
+            " [27.8 27.3 26.3 ... 21.3 32.8 32.2]]\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "Ulladulla = np.random.choice(df['ulladulla (ºC)'], size=(len(df), 100000), replace=True)\n",
+        "#Create 100000 simulated versions of Ulladulla temperature dataset by randomly resampling it (with replacement)\n",
+        "#len(X) is the length of Ulladulla data (which is 29), repeat 100000 times\n",
+        "print(Ulladulla)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "uhjbipDC269q",
+        "outputId": "610cae53-6bb5-4963-9caa-37219de50aa7"
+      },
+      "execution_count": 9,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "[[25.4 25.  20.9 ... 21.4 22.3 21.7]\n",
+            " [21.4 21.9 25.7 ... 22.3 25.7 24.7]\n",
+            " [24.7 24.7 24.1 ... 21.7 23.4 27.8]\n",
+            " ...\n",
+            " [21.2 24.1 21.4 ... 20.2 24.7 21.9]\n",
+            " [23.4 24.1 27.5 ... 24.1 20.2 20.2]\n",
+            " [16.7 16.7 24.  ... 24.7 23.5 20.9]]\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "bar_Canberra = np.mean(Canberra,axis=0)\n",
+        "bar_Ulladulla = np.mean(Ulladulla,axis=0)\n",
+        "#Take the average of each column in the Canberra and Ulladulla random choice dataset"
+      ],
+      "metadata": {
+        "id": "WfV-6U7q2-sr"
+      },
+      "execution_count": 10,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# **Individual Reflections**"
+      ],
+      "metadata": {
+        "id": "wUxJq3XFqtvl"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Sutton\n",
+        "\n",
+        "This week I had the role of Github repository and integration lead, requiring me to be the first to do the intial essential work t begin the assignment. The creation of the Github repository was straightforward, but when needing to share the Colab notebook I made an error in the permissions I selected for colaborators. This was quickly remedied after Cathy gave me a heads up and I reshared the notebook with correct editorial permissions."
+      ],
+      "metadata": {
+        "id": "ZTYTpzxaqzl-"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Kimi"
+      ],
+      "metadata": {
+        "id": "EaczuO7tq5uT"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "The data steward role required me to obtain suitable data for an agreed upon topic. The data was relatively easy to obtain, due to the BOM having open access for all their station data. All available daily maximum temperatures were downloaded for both stations in the form of an excel sheet, these values were then obtained and placed in a seperate excel sheet by station and year for ease of access for the analysis/modelling role. From this role, I had learnt skills in relation to excel and assessing suitable data. Overall, a valueable learning experience."
+      ],
+      "metadata": {
+        "id": "I4_STfnK7R4J"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Cathy"
+      ],
+      "metadata": {
+        "id": "gNLQwauUq6Wt"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "To analyse the data, I used a similar method to what was done in class to bootstrap the temperature in Canberra and Ulladulla. The numpy function 'random choice' was used to resample the data 100000 times. Simulating this resampling over many times allowed for each simulation to be averaged, which will help produce a normal distribution curve, revealing a temperature range that Canberra and Ulladulla would typically see on Christmas day. This solidified my understanding on how to use the bootstraping method to analyse a set of data."
+      ],
+      "metadata": {
+        "id": "LIpg3Y7Hk8UF"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Sameer"
+      ],
+      "metadata": {
+        "id": "6j1dZ9ldq6q6"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "2UuN4_AsrFf1"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Leo"
+      ],
+      "metadata": {
+        "id": "BhTDKuxzq_rT"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Elena"
+      ],
+      "metadata": {
+        "id": "g0dOaOITrABv"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "7bM_repVqyhc"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
